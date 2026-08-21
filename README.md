@@ -1,11 +1,9 @@
-# PAVE Agent
 # PAVE — An Autonomous Preflight Briefing Agent
 
 *An experiment in whether AI agents can do the tedious half of preflight
 briefing and risk assessment — and hand a pilot something worth reading.*
 
 ![status: experimental](https://img.shields.io/badge/status-experimental-orange)
-![python](https://img.shields.io/badge/python-3.11+-blue)
 ![license](https://img.shields.io/badge/license-MIT-green)
 
 ---

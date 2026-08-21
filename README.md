@@ -82,10 +82,10 @@ flowchart TD
     CRON[cron: daily] --> CAL[Read calendar]
     CAL --> EX[Extract flight details]
 
-    EX --> P[P: Pilot<br/>]
-    EX --> A[A: Aircraft<br/>]
-    EX --> V[V: enVironment<br/>]
-    EX --> E[E: External<br/>]
+    EX --> P["<b>P</b>: Pilot<br/> - currency<br/> - validity<br/> - flight and duty "]
+    EX --> A["<b>A</b>: Aircraft<br/> - equipment<br/> - performance<br/> - airworthiness"]
+    EX --> V["<b>V</b>: enVironment<br/> - weather<br/> - terrain<br/> - airspace/route<br/> - aerodromes"]
+    EX --> E["<b>E</b>: External<br/> - on time performance"]
 
     P --> SUP[Supervisor<br/>synthesis]
     A --> SUP
@@ -95,6 +95,9 @@ flowchart TD
     SUP --> ASSESS[FlightRiskAssessment]
     ASSESS --> MAIL[Render & email]
 ```
+
+### Risk Assessment Matrix
+In progress . . .
 
 > ⚠️ **Educational project. Not for operational flight planning.** Always
 > obtain an official weather briefing and exercise your own judgment as

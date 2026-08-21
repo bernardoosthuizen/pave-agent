@@ -11,8 +11,8 @@ briefing and risk assessment — and hand a pilot something worth reading.*
 ## What this is
 
 The PAVE checklist — **P**ilot, **A**ircraft, **e**n**V**ironment,
-**E**xternal pressures — is a risk assessment framework to help you ask the right 
-questions and address the details that matter. Using this framework it is the aim 
+**E**xternal pressures — is a risk assessment framework to help pilots gather relevant information
+and address the details that matter. Using this framework it is the aim 
 that PAVE Agent provides crew with accurate information to assist in decision making 
 and risk mitigation.
 

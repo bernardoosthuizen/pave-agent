@@ -94,7 +94,24 @@ flowchart TD
     ASSESS --> MAIL[Render & email]
 ```
 
-### Risk Assessment Matrix
+### How risk is assessed
+#### Why not the typical 5x5 risk matrix?
+The typical risk matrix used in airline operations is based on the ICAO/FAA 
+5×5 grid — severity (Catastrophic→Negligible) against likelihood (Frequent→Extremely Improbable), 
+giving cells mapped to Intolerable / Tolerable / Acceptable zones. It's built for organisational 
+hazard management — an airline deciding whether contaminated-runway procedures are adequate across 
+ten thousand flights. These are not questions we can honestly answer. 
+
+The FAA Safety Team publishes a Flight Risk Assessment Tool built directly on PAVE. The mechanism 
+is refreshingly simple: weighted questions, sum the points, compare against thresholds, 
+get green/yellow/red. A FRAT is not a go/no-go decision framework - its a planning aid that
+facilitates the operator in identifying hazards. Operator defined gates based on all elements of the 
+PAVE framework make for an unbiased assessment. More about FRAT here: https://www.faa.gov/general/flight-risk-assessment-tool-frat-faa-safety-team
+
+#### The scoring model
+
+
+
 In progress . . .
 
 > ⚠️ **Educational project. Not for operational flight planning.** Always

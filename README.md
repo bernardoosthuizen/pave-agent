@@ -109,6 +109,20 @@ facilitates the operator in identifying hazards. Operator defined gates based on
 PAVE framework make for an unbiased assessment. More about FRAT here: https://www.faa.gov/general/flight-risk-assessment-tool-frat-faa-safety-team
 
 #### The scoring model
+Three mechanisms that assist in determine risk factor. In order of authority:
+##### 1. Hard gates
+Scenarios or parameters that automatically produce a high risk score. 
+##### 2. Weighted factors
+Parameters producing numeric values, later to be assessed to produce an overall risk score.
+##### 3. 'Interactions'
+Combination of factors producing higher scores than they would if individually assessed. 
+
+##### Quality multiplier
+The multiplier discounts uncertainty about occurrence, so a 30-hour-out forecast of embedded 
+thunderstorms, for example, may score lower than an observed one — because it may not verify, and if it does, 
+you'll re-run the briefing closer in and it'll come back at full weight.
+
+#### Using news as a lead
 
 
 

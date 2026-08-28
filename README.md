@@ -109,7 +109,7 @@ facilitates the operator in identifying hazards. Operator defined gates based on
 PAVE framework make for an unbiased assessment. More about FRAT here: https://www.faa.gov/general/flight-risk-assessment-tool-frat-faa-safety-team
 
 #### The scoring model
-Three mechanisms that assist in determine risk factor. In order of authority:
+Three mechanisms that assist in determining risk factors. In order of authority:
 ##### 1. Hard gates
 Scenarios or parameters that automatically produce a high risk score. 
 ##### 2. Weighted factors
@@ -118,11 +118,36 @@ Parameters producing numeric values, later to be assessed to produce an overall 
 Combination of factors producing higher scores than they would if individually assessed. 
 
 ##### Quality multiplier
-The multiplier discounts uncertainty about occurrence, so a 30-hour-out forecast of embedded 
+The multiplier discounts scores for uncertainty about occurrence, so a 30-hour-out forecast of embedded 
 thunderstorms, for example, may score lower than an observed one — because it may not verify, and if it does, 
 you'll re-run the briefing closer in and it'll come back at full weight.
 
 #### Using news as a lead
+A news report is not a fact about tomorrow's flight. It's a pointer to somewhere you should look. 
+The news agent's real job is query planning for the other agents. That's what makes the multi-agent 
+architecture genuinely load-bearing rather than decorative — one node changes what the others go looking for.
+
+```
+news signal  →  hypothesis  →  authoritative lookup  →  scored fact
+                     │
+                     └─ (if no lookup exists) → advisory-only watch item
+```
+
+##### Raw news breaks the scoring model
+Coverage ≠ risk. News covers the unusual, not the frequent. An airport with a persistent, well-managed hazard generates no coverage; one novel event generates forty articles. Volume of coverage is close to uncorrelated with hazard rate.
+
+Attention scales with airport size. KORD generates more aviation news in a week than KTTA does in a decade. Score raw coverage and you'll flag every major hub every single night, and never flag the untowered field where you're actually more likely to hurt yourself. This is the most insidious of the five, because it produces confident-looking output that's systematically inverted.
+
+One event, forty articles. Naive counting multiplies a single incident by its syndication footprint. Reuters, forty regional papers, three aggregators.
+
+Staleness. A 2019 incursion story surfacing in a search is not information about tomorrow.
+
+Untrusted input. You're feeding arbitrary web text into an LLM that produces structured output consumed downstream. That's a prompt injection surface, and it's the one people forget.
+
+This is where transparency plays a crucial role. The end user has to the factors based by evidence vs those that are not. 
+
+
+### Supervision 
 
 
 

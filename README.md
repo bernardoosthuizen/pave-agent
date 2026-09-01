@@ -1,7 +1,6 @@
 # PAVE — An Autonomous Preflight Briefing Agent
 
-*An experiment in whether AI agents can do the tedious half of preflight
-briefing and risk assessment — and hand a pilot something worth reading.*
+*An experiment in whether AI agents can handle the tedious half of preflight briefing and risk assessment—and give a pilot something worth reading.*
 
 ![status: experimental](https://img.shields.io/badge/status-experimental-orange)
 ![license](https://img.shields.io/badge/license-MIT-green)
@@ -10,20 +9,12 @@ briefing and risk assessment — and hand a pilot something worth reading.*
 
 ## What this is
 
-The PAVE checklist — **P**ilot, **A**ircraft, **e**n**V**ironment,
-**E**xternal pressures — is a risk assessment framework to help pilots gather relevant information
-and address the details that matter. Using this framework it is the aim 
-that PAVE Agent provides crew with accurate information to assist in decision making 
-and risk mitigation.
+The PAVE checklist — **P**ilot, **A**ircraft, en**V**ironment, and **E**xternal pressures — is a risk-assessment framework that helps pilots gather relevant information and focus on the details that matter. PAVE Agent uses this framework to provide pilots with accurate information to support decision-making and risk mitigation.
 
-The synthesis isn't intellectually hard. It's just *tedious and
-heterogeneous* — which is exactly the shape of problem AI agents are
-supposed to be good at.
+The synthesis itself isn’t intellectually difficult. It’s just tedious and spread across many different sources—which is exactly the kind of problem AI agents are supposed to handle well.
 
-**So: this project runs on a schedule, notices a flight on my calendar,
-gathers the scattered public data, reasons about it across the four PAVE
-domains, and emails me a briefing the night before I fly.** No prompting,
-no dashboard to remember to open. It shows up.
+**So, this project runs on a schedule, detects a flight on my calendar, gathers scattered public data, analyzes it across the four PAVE domains, and emails me a briefing the night before I fly.** No prompting, and no dashboard to remember to open. It simply shows up.
+
 
 ```
 Subject: [PAVE] KORD→KBOS 18:00Z — MODERATE (low ceilings, GDP risk)
@@ -35,45 +26,39 @@ Subject: [PAVE] KORD→KBOS 18:00Z — MODERATE (low ceilings, GDP risk)
 planning.**
 
 It is not a replacement for official weather briefings, ForeFlight,
-Leidos, or your own judgment. It is not certified, not verified, and not
-affiliated with any aviation authority. It will sometimes be confidently wrong.
+Leidos, or your own judgment. It is not certified, verified, or affiliated
+with any aviation authority. It will sometimes be confidently wrong.
 
-Three constraints follow from that, and they're baked into the design:
+Three constraints follow from that, and they are built into the design:
 
 - **It advises; it never decides.** The agent produces a risk *assessment*
-  with the factors it found. It does not issue go/no-go calls. That
-  authority belongs to the pilot in command and this project won't
-  pretend to borrow it.
-- **Every claim is traceable.** Each risk driver carries its source, so
-  you can check the raw METAR rather than trusting a paraphrase.
-- **It reports its own uncertainty.** When the agent can't parse a flight
-  or can't reach a data source, the briefing says so plainly instead of
-  filling the gap with plausible-sounding fiction.
+  based on the factors it finds. It does not issue go/no-go recommendations.
+  That authority belongs to the pilot in command, and this project does not
+  pretend otherwise.
+- **Every claim is traceable.** Each risk driver includes its source, so you
+  can check the raw METAR or other underlying data instead of simply
+  trusting a paraphrase.
+- **It reports its own uncertainty.** When the agent cannot parse a flight
+  or reach a data source, the briefing says so plainly instead of filling
+  the gap with plausible-sounding fiction.
 
-If aviation software has one cultural rule worth importing into AI, it's
-that a system which hides its own failure modes is more dangerous than
-one that has none.
+If aviation software has one cultural rule worth importing into AI, it is
+this: a system that hides its own failure modes is more dangerous than one
+that openly acknowledges them.
 
 ## Why I built it
 
-I'm learning agent development, and I wanted a problem with real
-constraints rather than another chatbot wrapper. Aviation is unusually
-good for this: the data is public, the domain punishes vagueness, and
-there's a genuine correctness standard.
+I'm learning how to develop agents, and I wanted a problem with real
+constraints rather than another chatbot wrapper. Aviation is an unusually
+good fit: the data is public, the domain punishes vagueness, and there is a
+genuine standard for correctness.
 
-This repo is the artifact of that learning. Alongside the code, the
-[**Design decisions**](#design-decisions) section documents the tradeoffs
-I made and, more usefully, the ones I got wrong first. The central one:
-**the LLM handles judgment, and plain deterministic Python handles
-everything else** — scheduling, fetching, formatting, delivery. That
-boundary makes the system debuggable, and it's the lesson I'd keep if I
-threw out all the rest.
 
 ## How it works
 
-Four specialist agents — one per PAVE domain — investigate in parallel. A
-supervisor weighs their findings, resolves conflicts, and produces a
-structured assessment that gets rendered to email.
+Four specialist agents—one for each PAVE domain—investigate in parallel. A
+supervisor then evaluates their findings, resolves conflicts, and produces
+a structured assessment that is rendered as an email.
 
 ```mermaid
 flowchart TD
@@ -96,36 +81,59 @@ flowchart TD
 
 ### How risk is assessed
 #### Why not the typical 5x5 risk matrix?
-The typical risk matrix used in airline operations is based on the ICAO/FAA 
-5×5 grid — severity (Catastrophic→Negligible) against likelihood (Frequent→Extremely Improbable), 
-giving cells mapped to Intolerable / Tolerable / Acceptable zones. It's built for organisational 
-hazard management — an airline deciding whether contaminated-runway procedures are adequate across 
-ten thousand flights. These are not questions we can honestly answer. 
+The typical risk matrix used in airline operations is based on the
+ICAO/FAA 5×5 grid: severity (*Catastrophic* to *Negligible*) against
+likelihood (*Frequent* to *Extremely Improbable*), with each cell mapped to
+an *Intolerable*, *Tolerable*, or *Acceptable* zone. It is designed for
+organizational hazard management—for example, an airline deciding whether
+its contaminated-runway procedures are adequate across ten thousand
+flights. These are not questions we can honestly answer.
 
-The FAA Safety Team publishes a Flight Risk Assessment Tool built directly on PAVE. The mechanism 
-is refreshingly simple: weighted questions, sum the points, compare against thresholds, 
-get green/yellow/red. A FRAT is not a go/no-go decision framework - its a planning aid that
-facilitates the operator in identifying hazards. Operator defined gates based on all elements of the 
-PAVE framework make for an unbiased assessment. More about FRAT here: https://www.faa.gov/general/flight-risk-assessment-tool-frat-faa-safety-team
+The FAA Safety Team publishes a Flight Risk Assessment Tool built directly
+on the PAVE framework. The mechanism is refreshingly simple: answer
+weighted questions, add up the points, compare the result against defined
+thresholds, and assign a green, yellow, or red risk level. A FRAT is not a
+go/no-go decision framework; it is a planning aid that helps operators
+identify hazards. Operator-defined gates based on the elements of the PAVE
+framework can support a more consistent and objective assessment.
+
+More information about the FAA Safety Team's FRAT is available here:  
+https://www.faa.gov/general/flight-risk-assessment-tool-frat-faa-safety-team
 
 #### The scoring model
-Three mechanisms that assist in determining risk factors. In order of authority:
+
+The system uses three mechanisms to help determine risk. In order of
+authority:
+
 ##### 1. Hard gates
-Scenarios or parameters that automatically produce a high risk score. 
+
+Scenarios or parameters that automatically produce a high-risk score.
+
 ##### 2. Weighted factors
-Parameters producing numeric values, later to be assessed to produce an overall risk score.
-##### 3. 'Interactions'
-Combination of factors producing higher scores than they would if individually assessed. 
+
+Parameters that produce numeric values, which are later combined to
+calculate an overall risk score.
+
+##### 3. Interactions
+
+Combinations of factors that produce a higher score than the factors would
+receive when assessed individually.
 
 ##### Quality multiplier
-The multiplier discounts scores for uncertainty about occurrence, so a 30-hour-out forecast of embedded 
-thunderstorms, for example, may score lower than an observed one — because it may not verify, and if it does, 
-you'll re-run the briefing closer in and it'll come back at full weight.
+
+The quality multiplier discounts scores when there is uncertainty about
+whether a condition will occur. For example, a forecast of embedded
+thunderstorms made 30 hours before departure may score lower than an
+observed occurrence because the forecast may not verify. If the condition
+does develop, the briefing can be rerun closer to departure and the risk
+will receive its full weight.
 
 #### Using news as a lead
-A news report is not a fact about tomorrow's flight. It's a pointer to somewhere you should look. 
-The news agent's real job is query planning for the other agents. That's what makes the multi-agent 
-architecture genuinely load-bearing rather than decorative — one node changes what the others go looking for.
+A news report is not a fact about tomorrow's flight. It is a pointer to
+something that needs further investigation. The news agent's real job is
+query planning for the other agents. That is what makes the multi-agent
+architecture genuinely load-bearing rather than decorative: one node changes
+what the others go looking for.
 
 ```
 news signal  →  hypothesis  →  authoritative lookup  →  scored fact
@@ -134,43 +142,63 @@ news signal  →  hypothesis  →  authoritative lookup  →  scored fact
 ```
 
 ##### Raw news breaks the scoring model
-Coverage ≠ risk. News covers the unusual, not the frequent. An airport with a persistent, well-managed hazard generates no coverage; one novel event generates forty articles. Volume of coverage is close to uncorrelated with hazard rate.
+**Coverage does not equal risk.** News outlets cover unusual events, not
+necessarily frequent ones. An airport with a persistent, well-managed
+hazard may generate no coverage, while a single novel event can generate
+dozens of articles. The volume of coverage is therefore a poor proxy for
+the underlying hazard rate.
 
-Attention scales with airport size. KORD generates more aviation news in a week than KTTA does in a decade. Score raw coverage and you'll flag every major hub every single night, and never flag the untowered field where you're actually more likely to hurt yourself. This is the most insidious of the five, because it produces confident-looking output that's systematically inverted.
+**Attention scales with airport size.** KORD can generate more aviation news
+in a week than KTTA generates in a decade. If raw coverage is scored
+directly, the system will flag major hubs every night while overlooking
+untowered airports where a pilot may face more relevant risks. This is the
+most insidious problem because it produces confident-looking output that is
+systematically distorted.
 
-One event, forty articles. Naive counting multiplies a single incident by its syndication footprint. Reuters, forty regional papers, three aggregators.
+**One event can generate dozens of articles.** Naive counting can multiply
+a single incident by its syndication footprint: one Reuters report, forty
+regional newspaper articles, and three aggregator pages may all describe
+the same event.
 
-Staleness. A 2019 incursion story surfacing in a search is not information about tomorrow.
+**Staleness matters.** A 2019 runway-incursion story that appears in a
+search result is not necessarily relevant information about tomorrow's
+flight.
 
-Untrusted input. You're feeding arbitrary web text into an LLM that produces structured output consumed downstream. That's a prompt injection surface, and it's the one people forget.
+**News is untrusted input.** Arbitrary web text is being passed to an LLM
+that produces structured output consumed downstream. That creates a prompt
+injection surface, and it is one that is easy to overlook.
 
-This is where transparency plays a crucial role. The end user has to the factors based by evidence vs those that are not. 
+This is where transparency plays a crucial role. The end user must be able
+to distinguish between factors supported by evidence and factors that are
+based on uncertainty, inference, or incomplete data.
 
 
 ### Supervision 
 
-The supervisor reads a finished, scored assessment and it looks for linkage between things the additive model treated as independent, and it writes the prose that a human actually reads.
+The supervisor reviews the completed, scored assessment and looks for
+connections between factors that the additive model treated as independent.
+It then writes the prose that a human actually reads.
 
 ### Learning & Feedback Policy
 
-## Feedback & Learning
-
-Nothing learns automatically. Feedback accumulates into versioned config and a human merges the change.
+Nothing learns automatically. Feedback accumulates in versioned configuration,
+and a human reviews and merges any changes.
 
 Rules:
 
-- **Tightening is easy, loosening is hard.** One report of "this happened and you
-  didn't warn me" is enough to act. Downgrading a warning needs repeated
-  independent reports.
-- **An ignored warning followed by a fine flight changes nothing.** It gets
-  logged for review. Most conservative calls are individually unnecessary;
-  tuning them away is how safety margins erode.
-- **The profile learns facts, not preferences.** Hours in type, currency,
-  airports flown — never what you seem willing to tolerate.
-- **Config changes are replayed against past briefings before merge**
-  (`risk replay --candidate weights-v8.yaml`), so you can see what would
-  have changed band.
-- **Disagreements become permanent test cases.** The suite only grows.
+- **Tightening is easy; loosening is hard.** A single report saying,
+  “This happened, and you didn’t warn me,” is enough to trigger a review.
+  Downgrading a warning requires repeated, independent reports.
+- **An ignored warning followed by a uneventful flight changes nothing.**
+  The result is logged for review. Most conservative warnings will be
+  unnecessary in individual cases; tuning them away is how safety margins
+  erode.
+- **The profile learns facts, not preferences.** It can learn hours in type,
+  currency, and airports flown—but never what the pilot appears willing to
+  tolerate.
+- **Configuration changes are replayed against past briefings before they
+  are merged**. This shows which risk bands would have changed.
+- **Disagreements become permanent test cases.** The test suite only grows.
 
   
 

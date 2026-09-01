@@ -149,9 +149,32 @@ This is where transparency plays a crucial role. The end user has to the factors
 
 ### Supervision 
 
+The supervisor reads a finished, scored assessment and it looks for linkage between things the additive model treated as independent, and it writes the prose that a human actually reads.
+
+### Learning & Feedback Policy
+
+## Feedback & Learning
+
+Nothing learns automatically. Feedback accumulates into versioned config and a human merges the change.
+
+Rules:
+
+- **Tightening is easy, loosening is hard.** One report of "this happened and you
+  didn't warn me" is enough to act. Downgrading a warning needs repeated
+  independent reports.
+- **An ignored warning followed by a fine flight changes nothing.** It gets
+  logged for review. Most conservative calls are individually unnecessary;
+  tuning them away is how safety margins erode.
+- **The profile learns facts, not preferences.** Hours in type, currency,
+  airports flown — never what you seem willing to tolerate.
+- **Config changes are replayed against past briefings before merge**
+  (`risk replay --candidate weights-v8.yaml`), so you can see what would
+  have changed band.
+- **Disagreements become permanent test cases.** The suite only grows.
+
+  
 
 
-In progress . . .
 
 > ⚠️ **Educational project. Not for operational flight planning.** Always
 > obtain an official weather briefing and exercise your own judgment as
